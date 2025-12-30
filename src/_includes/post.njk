@@ -1,0 +1,36 @@
+---
+layout: base.njk
+---
+
+<div class="glitch-overlay"></div>
+<div id="shape-container"></div>
+
+<div class="curtain left"></div>
+<div class="curtain right"></div>
+
+<div class="container">
+    <nav style="margin-bottom: 20px;">
+        <a href="/" class="ticket" style="font-size: 1em;">&lt;&lt; RETURN TO THE MAIN TENT</a>
+    </nav>
+
+    <div class="tent-card full-width" style="max-width: 800px; text-align: left;">
+        
+        <h1 style="color: var(--digi-yellow); text-shadow: 4px 4px var(--digi-red); margin-bottom: 10px;">{{ title }}</h1>
+        <p style="border-bottom: 4px dashed var(--digi-blue); padding-bottom: 20px; font-family: monospace;">
+            <strong>TRANSMISSION DATE:</strong> {{ date | date }}
+        </p>
+
+        <div class="blog-content" style="font-family: sans-serif; font-size: 1.1em; line-height: 1.6;">
+            {{ content | safe }}
+        </div>
+
+    </div>
+
+    <footer style="margin-top: 50px;">
+        <p>&copy; 2025 CITRUSFOX</p>
+    </footer>
+</div>
+
+<script>
+    
+</script>

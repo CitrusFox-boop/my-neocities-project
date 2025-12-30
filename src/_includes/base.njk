@@ -10,5 +10,60 @@
     
     {{ content | safe }}
 
+    <script>
+        // Check if a shape container exists; if not, create one so the script doesn't crash
+        if (!document.getElementById('shape-container')) {
+            const div = document.createElement('div');
+            div.id = 'shape-container';
+            document.body.prepend(div);
+        }
+
+        const container = document.getElementById('shape-container');
+        const colors = ['#ff0033', '#00ccff', '#ffff00', '#bb00ff', '#ffffff'];
+        const shapes = ['square', 'circle', 'triangle', 'bar'];
+
+        function createShape() {
+            const type = shapes[Math.floor(Math.random() * shapes.length)];
+            const depth = Math.random();
+            const shape = document.createElement('div');
+            shape.className = 'shape';
+            let baseSize = Math.random() * 60 + 20;
+            const size = baseSize * (0.5 + depth * 1.5);
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            shape.style.width = size + 'px';
+            shape.style.height = (type === 'bar' ? size / 4 : size) + 'px';
+            shape.style.backgroundColor = color;
+            if (type === 'circle') shape.style.borderRadius = '50%';
+            if (type === 'triangle') {
+                shape.style.backgroundColor = 'transparent';
+                shape.style.borderLeft = (size/2) + 'px solid transparent';
+                shape.style.borderRight = (size/2) + 'px solid transparent';
+                shape.style.borderBottom = size + 'px solid ' + color;
+            }
+            
+            shape.style.left = Math.random() * 100 + 'vw';
+            shape.style.top = Math.random() * 100 + 'vh';
+            shape.style.filter = `blur(${(1 - depth) * 4}px)`;
+            shape.style.opacity = (depth * 0.4) + 0.1;
+
+            // ANIMATION VARIABLES
+            const tx = (Math.random() - 0.5) * 200;
+            const ty = (Math.random() - 0.5) * 200;
+            const rot = (Math.random() - 0.5) * 360;
+            
+            shape.style.setProperty('--tx', tx + 'px');
+            shape.style.setProperty('--ty', ty + 'px');
+            shape.style.setProperty('--rot', rot + 'deg');
+            
+            // Randomize speed
+            shape.style.animationDuration = ((1 - depth) * 20 + 10) + 's';
+            
+            container.appendChild(shape);
+        }
+
+        // Generate 60 shapes for everyone
+        for (let i = 0; i < 60; i++) createShape();
+    </script>
 </body>
 </html>
