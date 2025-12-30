@@ -3,6 +3,15 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy("src/admin");
 
+  // FIX: This teaches Eleventy how to format dates!
+  eleventyConfig.addFilter("date", (dateObj) => {
+    return new Date(dateObj).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  });
+
   return {
     dir: {
       input: "src",

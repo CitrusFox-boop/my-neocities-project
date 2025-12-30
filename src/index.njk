@@ -1,15 +1,148 @@
 ---
-title: My VR Corner
 layout: base.njk
+title: Citrusfox | THE DIGITAL CHAOS
 ---
-<h1>Welcome to my Digital Space</h1>
-<p>Updates on my VR projects, 3D printing, and art.</p>
 
-<h2>Latest Updates</h2>
-<ul>
-  {% for post in collections.posts %}
-    <li>
-      <a href="{{ post.url }}">{{ post.data.title }}</a>
-    </li>
-  {% endfor %}
-</ul>
+<div class="glitch-overlay"></div>
+<div id="shape-container"></div>
+
+<div class="curtain left"></div>
+<div class="curtain right"></div>
+
+<img src="/assets/images/underconstruction-ezgif.com-optimize.gif" class="fg-gif left" alt="Under Construction">
+<img src="/assets/images/underconstruction-ezgif.com-optimize.gif" class="fg-gif right" alt="Under Construction">
+
+<div class="container">
+    <header class="marquee-container">
+        <div class="bulbs"></div>
+        <h1>THE BIG TOP</h1>
+        <div class="subtitle">! STARRING: CITRUSFOX !</div>
+        <br>
+        <div class="legacy-name">(FORMERLY WIDDLYWHAM)</div>
+    </header>
+
+    <nav>
+        <a href="#midway" class="ticket">THE MIDWAY</a>
+        <a href="#vault" class="ticket">THE VAULT</a>
+        <a href="#merch" class="ticket">SOUVENIRS</a>
+    </nav>
+
+    <div class="midway">
+        <div class="tent-card full-width">
+            <h2>THE MAIN EVENT</h2>
+            <p style="font-size: 1.6em; line-height: 1.1; color: var(--digi-yellow); font-family: 'Impact', sans-serif;">"STEP RIGHT UP! I BUILT THIS DIGITAL VOID BECAUSE THE PHYSICAL WORLD WAS EMPTY! NOW THE THEATER IS FULL!"</p>
+            <p>I am deep in the ink for the sequel to <strong>AT THE GYM</strong>. The ink is digital, the pain is optional, and the show is UNSTOPPABLE!</p>
+            
+            <h3>LATEST TRANSMISSIONS:</h3>
+            <ul>
+            {% for post in collections.posts %}
+              <li><a href="{{ post.url }}" style="color:white;">{{ post.data.title }}</a> - {{ post.date | date('yyyy-MM-dd') }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+
+        <div id="midway" class="tent-card">
+            <h2>THE MIDWAY</h2>
+            <p>Find the Ringleader across the simulated landscape!</p>
+            <div class="link-list">
+                <a href="https://bsky.app/profile/widdlywham.bsky.social" target="_blank">🌀 BLUESKY [STABLE]</a>
+                <a href="https://x.com/Widdlywham" target="_blank">🚨 TWITTER [CHAOTIC]</a>
+                <a href="https://www.furaffinity.net/user/ratchclank/" target="_blank">💾 FUR AFFINITY [LEGACY]</a>
+            </div>
+        </div>
+
+        <div id="vault" class="tent-card">
+            <h2>THE VIP TENT</h2>
+            <p>Go backstage! See the wires! Fund the simulation!</p>
+            <div class="link-list">
+                <a href="https://www.patreon.com/cw/Widdlywham" target="_blank">💸 PATREON</a>
+            </div>
+            <div style="background: #fff; color: #000; padding: 10px; font-family: monospace; font-weight: bold; margin-top: 10px; border: 2px solid #000;">
+                > ACCESS: 4K_PSD_FILES_ENABLED<br>
+                > VOTING_POWER: ACTIVE
+            </div>
+        </div>
+
+        <div id="merch" class="tent-card full-width" style="transform: rotate(-1deg); border-color: var(--digi-yellow);">
+            <h2>THE SOUVENIR STAND</h2>
+            <p>Physical artifacts from a digital world! Coming in 2026!</p>
+            <div style="border: 6px dashed var(--digi-blue); padding: 20px; background: #000; text-align: center;">
+                <span style="color: var(--digi-red); font-weight: bold; font-size: 1.4em; font-family: 'Impact', sans-serif;">[ STATUS: PRINTING_IN_PROGRESS ]</span><br>
+                Hand-made zines! Retro-soul! Black and White logic! Cardstock protection!
+            </div>
+        </div>
+    </div>
+
+    <div class="marquee-footer">
+        <span>NO EXIT FOUND // DATA FRAGMENTS DETECTED // DON'T TOUCH THE PROPS // RECOVERED & INTEGRATED // WELCOME HOME //</span>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 CITRUSFOX | FOR THE CITIZENS OF THE VOID</p>
+        <p>REBOOT_VERSION: 2.0_NEW_GAME_PLUS</p>
+    </footer>
+</div>
+
+<script>
+    const container = document.getElementById('shape-container');
+    const colors = ['#ff0033', '#00ccff', '#ffff00', '#bb00ff', '#ffffff'];
+    const shapes = ['square', 'circle', 'triangle', 'bar', 'gif'];
+
+    function createShape() {
+        const isGif = Math.random() > 0.5; 
+        const type = isGif ? 'gif' : shapes[Math.floor(Math.random() * (shapes.length - 1))];
+        const depth = Math.random();
+        const shape = document.createElement(isGif ? 'img' : 'div');
+        shape.className = 'shape';
+
+        let baseSize = Math.random() * 60 + 20;
+        const size = baseSize * (0.5 + depth * 1.5);
+        const blur = (1 - depth) * 4;
+        const duration = (1 - depth) * 25 + 5; 
+        const opacity = (depth * 0.4) + 0.1; 
+        
+        if (isGif) {
+            shape.src = '/assets/images/underconstruction-ezgif.com-optimize.gif';
+            shape.style.width = size + 'px';
+            shape.style.height = 'auto';
+            shape.style.imageRendering = 'pixelated';
+            shape.onerror = function() { this.style.display = 'none'; };
+        } else {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            shape.style.width = size + 'px';
+            shape.style.height = (type === 'bar' ? size / 4 : size) + 'px';
+            shape.style.backgroundColor = color;
+            if (type === 'circle') shape.style.borderRadius = '50%';
+            if (type === 'triangle') {
+                shape.style.backgroundColor = 'transparent';
+                shape.style.width = '0';
+                shape.style.height = '0';
+                shape.style.borderLeft = (size/2) + 'px solid transparent';
+                shape.style.borderRight = (size/2) + 'px solid transparent';
+                shape.style.borderBottom = size + 'px solid ' + color;
+            }
+        }
+        
+        shape.style.left = Math.random() * 100 + 'vw';
+        shape.style.top = Math.random() * 100 + 'vh';
+        shape.style.filter = `blur(${blur}px)`;
+        shape.style.opacity = opacity;
+
+        const tx = (Math.random() - 0.5) * (400 + depth * 800);
+        const ty = (Math.random() - 0.5) * (400 + depth * 800);
+        const rot = (Math.random() - 0.5) * 720;
+        
+        shape.style.setProperty('--tx', tx + 'px');
+        shape.style.setProperty('--ty', ty + 'px');
+        shape.style.setProperty('--rot', rot + 'deg');
+        
+        shape.style.animationDuration = duration + 's';
+        shape.style.animationDelay = -(Math.random() * 20) + 's';
+
+        container.appendChild(shape);
+    }
+
+    for (let i = 0; i < 110; i++) {
+        createShape();
+    }
+</script>
