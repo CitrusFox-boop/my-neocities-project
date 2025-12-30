@@ -1,0 +1,15 @@
+---
+title: My VR Corner
+layout: base.njk
+---
+<h1>Welcome to my Digital Space</h1>
+<p>Updates on my VR projects, 3D printing, and art.</p>
+
+<h2>Latest Updates</h2>
+<ul>
+  {% for post in collections.posts %}
+    <li>
+      <a href="{{ post.url }}">{{ post.data.title }}</a>
+    </li>
+  {% endfor %}
+</ul>

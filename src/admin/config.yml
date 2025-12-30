@@ -1,0 +1,18 @@
+backend:
+  name: git-gateway
+  branch: main
+local_backend: true
+media_folder: 'src/assets/images'
+public_folder: '/assets/images'
+collections:
+  - name: 'posts'
+    label: 'Blog Posts'
+    folder: 'src/posts'
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    fields:
+      - {label: 'Layout', name: 'layout', widget: 'hidden', default: 'base.njk'}
+      - {label: 'Tags', name: 'tags', widget: 'hidden', default: 'posts'}
+      - {label: 'Title', name: 'title', widget: 'string'}
+      - {label: 'Publish Date', name: 'date', widget: 'datetime'}
+      - {label: 'Body', name: 'body', widget: 'markdown'}
