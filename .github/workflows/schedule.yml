@@ -1,0 +1,26 @@
+name: Scheduled Publish
+
+on:
+  schedule:
+    # This weird code means: "Run at 14:00 UTC" (8:00 AM CST) every day
+    - cron: '0 14 * * *'
+  workflow_dispatch: # This lets you click a "Run Now" button manually if you want
+
+jobs:
+  daily-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build Site
+      run: npx @11ty/eleventy
+
+    - name: Deploy to Neocities
+      uses: bcomnes/deploy-to-neocities@v1
+      with:
+        api_token: ${{ secrets.NEOCITIES_API_TOKEN }}
+        cleanup: false
+        dist_dir: _site

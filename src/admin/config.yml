@@ -1,18 +1,24 @@
 backend:
   name: git-gateway
   branch: main
+
+# CRITICAL FIX: This allows you to log in locally without a password!
 local_backend: true
-media_folder: 'src/assets/images'
-public_folder: '/assets/images'
+
+media_folder: "src/assets/images"
+public_folder: "/assets/images"
+
 collections:
-  - name: 'posts'
-    label: 'Blog Posts'
-    folder: 'src/posts'
+  - name: "posts"
+    label: "Blog Posts"
+    folder: "src/posts"
     create: true
-    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - {label: 'Layout', name: 'layout', widget: 'hidden', default: 'base.njk'}
-      - {label: 'Tags', name: 'tags', widget: 'hidden', default: 'posts'}
-      - {label: 'Title', name: 'title', widget: 'string'}
-      - {label: 'Publish Date', name: 'date', widget: 'datetime'}
-      - {label: 'Body', name: 'body', widget: 'markdown'}
+      - {label: "Title", name: "title", widget: "string"}
+      
+      # Date with "picker_utc: false" (Uses Texas Time)
+      - {label: "Publish Date", name: "date", widget: "datetime", picker_utc: false}
+      
+      - {label: "Tags", name: "tags", widget: "hidden", default: "posts"}
+      - {label: "Body", name: "body", widget: "markdown"}
