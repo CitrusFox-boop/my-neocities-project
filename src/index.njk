@@ -22,12 +22,12 @@ title: Citrusfox | THE DIGITAL CHAOS
     </header>
 
     <nav>
-        <a href="#midway" class="ticket">THE MIDWAY</a>
-        <a href="#vault" class="ticket">THE VAULT</a>
+        <a href="/blog/" class="ticket">THE MIDWAY</a>
+        <a href="/gallery/" class="ticket">THE VAULT</a>
         <a href="#merch" class="ticket">SOUVENIRS</a>
     </nav>
 
-    <div class="midway">
+    <div class="midway-layout">
         <div class="tent-card full-width">
             <h2>THE MAIN EVENT</h2>
             <p style="font-size: 1.6em; line-height: 1.1; color: var(--digi-yellow); font-family: 'Impact', sans-serif;">"STEP RIGHT UP! I BUILT THIS DIGITAL VOID BECAUSE THE PHYSICAL WORLD WAS EMPTY! NOW THE THEATER IS FULL!"</p>
@@ -35,14 +35,20 @@ title: Citrusfox | THE DIGITAL CHAOS
             
             <h3>LATEST TRANSMISSIONS:</h3>
             <ul>
-            {% for post in collections.posts %}
-              <li><a href="{{ post.url }}" style="color:white;">{{ post.data.title }}</a> - {{ post.date | date('yyyy-MM-dd') }}</li>
+            {% for post in collections.posts | reverse | slice(0, 3) %}
+              <li>
+                  <a href="{{ post.url }}" style="color:white;">{{ post.data.title }}</a> 
+                  <span style="color: var(--digi-blue); font-size: 0.8em;">[{{ post.date | date('yyyy-MM-dd') }}]</span>
+              </li>
             {% endfor %}
             </ul>
+            <p style="text-align: right; margin-top: 10px;">
+                <a href="/blog/" style="color: var(--digi-yellow); font-weight: bold;">>> VIEW FULL ARCHIVE</a>
+            </p>
         </div>
 
-        <div id="midway" class="tent-card">
-            <h2>THE MIDWAY</h2>
+        <div class="tent-card">
+            <h2>SOCIAL SIGNALS</h2>
             <p>Find the Ringleader across the simulated landscape!</p>
             <div class="link-list">
                 <a href="https://bsky.app/profile/widdlywham.bsky.social" target="_blank">🌀 BLUESKY [STABLE]</a>
@@ -51,8 +57,8 @@ title: Citrusfox | THE DIGITAL CHAOS
             </div>
         </div>
 
-        <div id="vault" class="tent-card">
-            <h2>THE VIP TENT</h2>
+        <div class="tent-card">
+            <h2>THE PATREON VIP</h2>
             <p>Go backstage! See the wires! Fund the simulation!</p>
             <div class="link-list">
                 <a href="https://www.patreon.com/cw/Widdlywham" target="_blank">💸 PATREON</a>

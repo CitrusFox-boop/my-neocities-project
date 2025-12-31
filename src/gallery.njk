@@ -1,0 +1,242 @@
+---
+layout: base.njk
+title: The Vault
+---
+
+<div class="container">
+    <div class="marquee-container" style="margin-bottom: 40px;">
+        <div class="bulbs"></div>
+        <h1>THE VAULT</h1>
+        <div class="subtitle">ARTIFACTS & CREATIONS</div>
+    </div>
+
+    <nav>
+        <a href="/" class="ticket">&lt;&lt; BACK TO LOBBY</a>
+    </nav>
+
+    <div class="gallery-grid" id="gallery-container">
+        {% for art in collections.gallery %}
+        <div class="art-frame" onclick="openLightbox({{ loop.index0 }})">
+            <div class="art-image">
+                <img src="{{ art.data.image }}" alt="{{ art.data.title }}" loading="lazy">
+            </div>
+            <div class="art-info">
+                <h3>{{ art.data.title }}</h3>
+                <span class="hidden-caption" style="display:none;">{{ art.data.title }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="lightbox-overlay" class="lightbox">
+    <span class="close-btn" onclick="closeLightbox()">&times;</span>
+    
+    <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+    <a class="next" onclick="changeSlide(1)">&#10095;</a>
+
+    <img class="lightbox-content" id="lightbox-img">
+    <div id="caption"></div>
+</div>
+
+<style>
+    /* --- GRID LAYOUT --- */
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        width: 100%;
+        padding: 20px 0;
+    }
+    
+    .art-frame {
+        background: #000;
+        border: 2px solid var(--digi-blue);
+        box-shadow: 6px 6px 0 var(--digi-purple);
+        transition: 0.2s;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .art-frame:hover {
+        transform: translateY(-5px);
+        border-color: var(--digi-yellow);
+        box-shadow: 8px 8px 0 var(--digi-red);
+        z-index: 10;
+    }
+
+    .art-image {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        border-bottom: 2px dashed #333;
+    }
+
+    .art-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.3s;
+    }
+    
+    .art-frame:hover img {
+        transform: scale(1.1);
+    }
+
+    .art-info {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .art-info h3 {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--digi-yellow);
+        font-family: 'Impact', sans-serif;
+    }
+
+    /* --- LIGHTBOX STYLES --- */
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.95);
+        backdrop-filter: blur(5px);
+    }
+
+    .lightbox-content {
+        margin: auto;
+        display: block;
+        width: auto;
+        max-width: 90%;
+        max-height: 80vh;
+        border: 4px solid var(--digi-yellow);
+        box-shadow: 0 0 50px var(--digi-blue);
+        margin-top: 2%; 
+    }
+
+    #caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        font-size: 1.5rem;
+        font-family: 'Courier New', monospace;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 60px;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+        z-index: 1001;
+    }
+
+    .close-btn:hover {
+        color: var(--digi-red);
+    }
+
+    /* Navigation Arrows */
+    .prev, .next {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        width: auto;
+        padding: 16px;
+        margin-top: -50px;
+        color: white;
+        font-weight: bold;
+        font-size: 40px;
+        transition: 0.6s ease;
+        border-radius: 0 3px 3px 0;
+        user-select: none;
+        -webkit-user-select: none;
+        z-index: 1001;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    .next {
+        right: 0;
+        border-radius: 3px 0 0 3px;
+    }
+
+    .prev:hover, .next:hover {
+        background-color: var(--digi-blue);
+        color: #000;
+    }
+</style>
+
+<script>
+    // Variables to track where we are
+    let currentIndex = 0;
+    let galleryItems = [];
+
+    // On Load: Find all gallery images so we can loop through them
+    document.addEventListener("DOMContentLoaded", function() {
+        const frames = document.querySelectorAll('.art-frame');
+        frames.forEach((frame, index) => {
+            const img = frame.querySelector('img');
+            const title = frame.querySelector('.hidden-caption').innerText;
+            galleryItems.push({
+                src: img.src,
+                title: title
+            });
+        });
+    });
+
+    // Open the modal at a specific index
+    function openLightbox(index) {
+        currentIndex = index;
+        updateLightboxContent();
+        document.getElementById("lightbox-overlay").style.display = "block";
+    }
+
+    // Close the modal
+    function closeLightbox() {
+        document.getElementById("lightbox-overlay").style.display = "none";
+    }
+
+    // Next/Prev controls
+    function changeSlide(n) {
+        currentIndex += n;
+        
+        // Loop logic: If at end, go to start. If at start, go to end.
+        if (currentIndex >= galleryItems.length) {
+            currentIndex = 0;
+        } else if (currentIndex < 0) {
+            currentIndex = galleryItems.length - 1;
+        }
+        
+        updateLightboxContent();
+    }
+
+    // Update the image source and text
+    function updateLightboxContent() {
+        const item = galleryItems[currentIndex];
+        document.getElementById("lightbox-img").src = item.src;
+        document.getElementById("caption").innerText = item.title;
+    }
+
+    // Keyboard navigation (Left/Right arrow keys)
+    document.addEventListener('keydown', function(event) {
+        if (document.getElementById("lightbox-overlay").style.display === "block") {
+            if (event.key === "ArrowLeft") {
+                changeSlide(-1);
+            } else if (event.key === "ArrowRight") {
+                changeSlide(1);
+            } else if (event.key === "Escape") {
+                closeLightbox();
+            }
+        }
+    });
+</script>

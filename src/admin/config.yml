@@ -2,13 +2,14 @@ backend:
   name: git-gateway
   branch: main
 
-# CRITICAL FIX: This allows you to log in locally without a password!
+# 1. Local Access Key
 local_backend: true
 
 media_folder: "src/assets/images"
 public_folder: "/assets/images"
 
 collections:
+  # --- BLOG POSTS ---
   - name: "posts"
     label: "Blog Posts"
     folder: "src/posts"
@@ -16,9 +17,20 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - {label: "Title", name: "title", widget: "string"}
-      
-      # Date with "picker_utc: false" (Uses Texas Time)
-      - {label: "Publish Date", name: "date", widget: "datetime", picker_utc: false}
-      
+      - {label: "Publish Date", name: "date", widget: "datetime", picker_utc: false} 
       - {label: "Tags", name: "tags", widget: "hidden", default: "posts"}
       - {label: "Body", name: "body", widget: "markdown"}
+
+  # --- THE VAULT (GALLERY) ---
+  - name: "gallery"
+    label: "The Vault (Art)"
+    folder: "src/gallery-items"
+    create: true
+    slug: "{{year}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Artwork", name: "image", widget: "image"}
+      - {label: "Caption", name: "body", widget: "text"}
+      
+      # THE FIX: This hidden tag tells the website "Put me in the Gallery!"
+      - {label: "Tags", name: "tags", widget: "hidden", default: "gallery"}

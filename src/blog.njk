@@ -1,0 +1,29 @@
+---
+layout: base.njk
+title: The Midway
+---
+
+<div class="container">
+    <div class="marquee-container">
+        <div class="bulbs"></div>
+        <h1>THE MIDWAY</h1>
+        <div class="subtitle">ALL TRANSMISSIONS</div>
+    </div>
+
+    <nav>
+        <a href="/" class="ticket">&lt;&lt; BACK TO LOBBY</a>
+    </nav>
+
+    <div class="tent-card full-width">
+        <ul class="link-list">
+            {% for post in collections.posts | reverse %}
+            <li>
+                <a href="{{ post.url }}">
+                    <span style="font-size: 0.6em; color: var(--digi-red);">[{{ post.date | date('yyyy-MM-dd') }}]</span>
+                    {{ post.data.title }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
