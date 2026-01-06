@@ -4,10 +4,17 @@ title: The Vault
 ---
 
 <div class="container">
-    <div class="marquee-container" style="margin-bottom: 40px;">
+    <div class="marquee-container" style="margin-bottom: 20px;">
         <div class="bulbs"></div>
         <h1>THE VAULT</h1>
         <div class="subtitle">ARTIFACTS & CREATIONS</div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 30px; margin-top: 10px;">
+        <a href="https://citrusfoxafterdark.neocities.org/" target="_blank" 
+           style="color: #ff0000; font-weight: bold; font-size: 1.4em; text-decoration: none; border-bottom: 2px solid #ff0000; font-family: sans-serif; letter-spacing: 1px;">
+           >> TO THE RED TENT (18+) <<
+        </a>
     </div>
 
     <nav>
@@ -177,7 +184,7 @@ title: The Vault
 </style>
 
 <script>
-    // Variables to track where we are
+    // --- LIGHTBOX LOGIC ---
     let currentIndex = 0;
     let galleryItems = [];
 
@@ -210,7 +217,7 @@ title: The Vault
     function changeSlide(n) {
         currentIndex += n;
         
-        // Loop logic: If at end, go to start. If at start, go to end.
+        // Loop logic
         if (currentIndex >= galleryItems.length) {
             currentIndex = 0;
         } else if (currentIndex < 0) {
@@ -227,7 +234,7 @@ title: The Vault
         document.getElementById("caption").innerText = item.title;
     }
 
-    // Keyboard navigation (Left/Right arrow keys)
+    // Keyboard navigation
     document.addEventListener('keydown', function(event) {
         if (document.getElementById("lightbox-overlay").style.display === "block") {
             if (event.key === "ArrowLeft") {
