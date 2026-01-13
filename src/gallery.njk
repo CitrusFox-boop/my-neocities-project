@@ -22,14 +22,10 @@ title: The Vault
     </nav>
 
     <div class="gallery-grid" id="gallery-container">
-        {% for art in collections.gallery %}
+        {% for art in collections.gallery | reverse %}
         <div class="art-frame" onclick="openLightbox({{ loop.index0 }})">
             <div class="art-image">
-                <img src="{{ art.data.image }}" alt="{{ art.data.title }}" loading="lazy">
-            </div>
-            <div class="art-info">
-                <h3>{{ art.data.title }}</h3>
-                <span class="hidden-caption" style="display:none;">{{ art.data.title }}</span>
+                <img src="{{ art.data.image }}" alt="Gallery Image" loading="lazy">
             </div>
         </div>
         {% endfor %}
@@ -42,8 +38,9 @@ title: The Vault
     <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
     <a class="next" onclick="changeSlide(1)">&#10095;</a>
 
-    <img class="lightbox-content" id="lightbox-img">
-    <div id="caption"></div>
+    <div class="lightbox-wrapper">
+        <img class="lightbox-content" id="lightbox-img" onclick="toggleZoom()">
+    </div>
 </div>
 
 <style>
@@ -63,6 +60,7 @@ title: The Vault
         transition: 0.2s;
         cursor: pointer;
         position: relative;
+        height: 200px; /* Fixed height for uniformity */
     }
 
     .art-frame:hover {
@@ -74,9 +72,8 @@ title: The Vault
 
     .art-image {
         width: 100%;
-        height: 200px;
+        height: 100%;
         overflow: hidden;
-        border-bottom: 2px dashed #333;
     }
 
     .art-image img {
@@ -90,19 +87,7 @@ title: The Vault
         transform: scale(1.1);
     }
 
-    .art-info {
-        padding: 10px;
-        text-align: center;
-    }
-
-    .art-info h3 {
-        margin: 0;
-        font-size: 1rem;
-        color: var(--digi-yellow);
-        font-family: 'Impact', sans-serif;
-    }
-
-    /* --- LIGHTBOX STYLES --- */
+    /* --- LIGHTBOX & ZOOM STYLES --- */
     .lightbox {
         display: none;
         position: fixed;
@@ -113,28 +98,33 @@ title: The Vault
         height: 100%;
         background-color: rgba(0,0,0,0.95);
         backdrop-filter: blur(5px);
+        overflow: hidden;
+    }
+
+    .lightbox-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: auto; /* Allow scrolling when zoomed */
     }
 
     .lightbox-content {
-        margin: auto;
-        display: block;
-        width: auto;
         max-width: 90%;
-        max-height: 80vh;
-        border: 4px solid var(--digi-yellow);
+        max-height: 85vh;
+        border: 2px solid var(--digi-yellow);
         box-shadow: 0 0 50px var(--digi-blue);
-        margin-top: 2%; 
+        cursor: zoom-in; /* Show magnifying glass */
+        transition: transform 0.3s ease;
+        z-index: 1000;
     }
 
-    #caption {
-        margin: auto;
-        display: block;
-        width: 80%;
-        text-align: center;
-        color: #ccc;
-        padding: 10px 0;
-        font-size: 1.5rem;
-        font-family: 'Courier New', monospace;
+    /* THE ZOOM EFFECT */
+    .lightbox-content.zoomed {
+        transform: scale(2); /* 2x Magnification */
+        cursor: zoom-out;
+        z-index: 1002;
     }
 
     .close-btn {
@@ -146,14 +136,11 @@ title: The Vault
         font-weight: bold;
         transition: 0.3s;
         cursor: pointer;
-        z-index: 1001;
+        z-index: 2000;
     }
 
-    .close-btn:hover {
-        color: var(--digi-red);
-    }
+    .close-btn:hover { color: var(--digi-red); }
 
-    /* Navigation Arrows */
     .prev, .next {
         cursor: pointer;
         position: absolute;
@@ -167,53 +154,43 @@ title: The Vault
         transition: 0.6s ease;
         border-radius: 0 3px 3px 0;
         user-select: none;
-        -webkit-user-select: none;
-        z-index: 1001;
+        z-index: 2000;
         background-color: rgba(0,0,0,0.5);
     }
 
-    .next {
-        right: 0;
-        border-radius: 3px 0 0 3px;
-    }
-
-    .prev:hover, .next:hover {
-        background-color: var(--digi-blue);
-        color: #000;
-    }
+    .next { right: 0; border-radius: 3px 0 0 3px; }
+    .prev:hover, .next:hover { background-color: var(--digi-blue); color: #000; }
 </style>
 
 <script>
-    // --- LIGHTBOX LOGIC ---
+    // --- VARIABLES ---
     let currentIndex = 0;
     let galleryItems = [];
 
-    // On Load: Find all gallery images so we can loop through them
+    // --- LOAD IMAGES ---
     document.addEventListener("DOMContentLoaded", function() {
+        // We select the images directly since we removed the hidden text captions
         const frames = document.querySelectorAll('.art-frame');
-        frames.forEach((frame, index) => {
+        frames.forEach((frame) => {
             const img = frame.querySelector('img');
-            const title = frame.querySelector('.hidden-caption').innerText;
-            galleryItems.push({
-                src: img.src,
-                title: title
-            });
+            galleryItems.push(img.src);
         });
     });
 
-    // Open the modal at a specific index
+    // --- OPEN LIGHTBOX ---
     function openLightbox(index) {
         currentIndex = index;
         updateLightboxContent();
         document.getElementById("lightbox-overlay").style.display = "block";
     }
 
-    // Close the modal
+    // --- CLOSE LIGHTBOX ---
     function closeLightbox() {
         document.getElementById("lightbox-overlay").style.display = "none";
+        resetZoom(); // Always reset zoom when closing
     }
 
-    // Next/Prev controls
+    // --- CHANGE SLIDE ---
     function changeSlide(n) {
         currentIndex += n;
         
@@ -225,16 +202,26 @@ title: The Vault
         }
         
         updateLightboxContent();
+        resetZoom(); // Reset zoom when changing image
     }
 
-    // Update the image source and text
+    // --- UPDATE CONTENT ---
     function updateLightboxContent() {
-        const item = galleryItems[currentIndex];
-        document.getElementById("lightbox-img").src = item.src;
-        document.getElementById("caption").innerText = item.title;
+        document.getElementById("lightbox-img").src = galleryItems[currentIndex];
     }
 
-    // Keyboard navigation
+    // --- ZOOM FUNCTIONS ---
+    function toggleZoom() {
+        const img = document.getElementById("lightbox-img");
+        img.classList.toggle("zoomed");
+    }
+
+    function resetZoom() {
+        const img = document.getElementById("lightbox-img");
+        img.classList.remove("zoomed");
+    }
+
+    // --- KEYBOARD CONTROLS ---
     document.addEventListener('keydown', function(event) {
         if (document.getElementById("lightbox-overlay").style.display === "block") {
             if (event.key === "ArrowLeft") {
